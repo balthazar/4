@@ -5,11 +5,14 @@ const initialState = {
   boards: [],
   threads: [],
 
+  filter: '',
   watch: {},
 
 }
 
 export default handleActions({
+
+  CHANGE_FILTER: (state, { payload: filter = '' }) => ({ ...state, filter: filter.toLowerCase() }),
 
   SELECT_BOARD: state => ({ ...state, threads: [] }),
 

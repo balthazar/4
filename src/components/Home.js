@@ -7,7 +7,7 @@ import spinners from 'cli-spinners'
 import BoardList from 'components/BoardList'
 import ThreadList from 'components/ThreadList'
 
-import { fetchBoards, fetchBoard, toggleWatch } from 'actions/main'
+import { fetchBoards, fetchBoard, toggleWatch, changeFilter } from 'actions/main'
 import { toggleRefresh } from 'actions/config'
 
 @provideHooks({
@@ -17,12 +17,23 @@ import { toggleRefresh } from 'actions/config'
   ]),
 })
 @connect(({
-  main: { boards, threads, watch },
+  main: { boards, threads, watch, filter },
   config: { selectedBoard, refresh },
-}) => ({ boards, threads, watch, selectedBoard, refresh }), {
+}) => ({
+  boards,
+  threads: threads.filter(t =>
+    (t.com && t.com.toLowerCase().includes(filter))
+    || (t.sub && t.sub.toLowerCase().includes(filter))
+  ),
+  watch,
+  filter,
+  selectedBoard,
+  refresh,
+}), {
   fetchBoard,
   toggleRefresh,
   toggleWatch,
+  changeFilter,
 })
 class Home extends Component {
 
@@ -76,7 +87,15 @@ class Home extends Component {
 
   render () {
 
-    const { boards, threads, watch, selectedBoard, toggleWatch } = this.props
+    const {
+      boards,
+      threads,
+      watch,
+      filter,
+      selectedBoard,
+      toggleWatch,
+      changeFilter,
+    } = this.props
 
     return (
       <div>
@@ -86,10 +105,18 @@ class Home extends Component {
           boardNames={boards.map(({ board }) => board)}
         />
 
+        <input
+          className='main-filter'
+          placeholder='Filter threads'
+          type='text'
+          value={filter}
+          onChange={e => changeFilter(e.target.value)} />
+
         <ThreadList
           onClick={toggleWatch}
           watch={watch}
           board={selectedBoard}
+          filter={filter}
           threads={threads} />
 
       </div>

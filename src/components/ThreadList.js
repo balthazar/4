@@ -42,9 +42,9 @@ class ThreadList extends Component {
 
   render () {
 
-    const { threads, watch } = this.props
+    const { filter, threads, watch } = this.props
 
-    if (!threads.length) {
+    if (!threads.length && !filter) {
       return (
         <div className='threads'>
           {Array(20).fill(0).map((v, i) => (

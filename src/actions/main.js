@@ -10,3 +10,4 @@ export const fetchBoard = createAction('API:FETCH_BOARD', boardName => ({
 }))
 
 export const toggleWatch = createAction('TOGGLE_WATCH')
+export const changeFilter = createAction('CHANGE_FILTER')
