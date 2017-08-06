@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions'
 
 const initialState = {
 
-  selectedBoard: 'pol',
+  selectedBoard: 'biz',
   refresh: true,
 
 }
