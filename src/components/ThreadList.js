@@ -24,7 +24,7 @@ class ThreadList extends Component {
         <div
           className='back'
           style={{
-            background: `url(https://t.4cdn.org/${board}/${t.tim}s.jpg)`,
+            background: `url(https://i.4cdn.org/${board}/${t.tim}s.jpg)`,
             backgroundSize: 'cover',
           }}
         />
