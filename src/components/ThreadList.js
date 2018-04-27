@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import cx from 'classnames'
 
 class ThreadList extends Component {
-
   click = id => e => {
     const { board, onClick } = this.props
     if (!e.shiftKey) {
@@ -16,15 +15,11 @@ class ThreadList extends Component {
     const { board } = this.props
 
     return (
-      <div
-        key={t.no}
-        onClick={this.click(t.no)}
-        className={cx('thread-block', { watched })}>
-
+      <div key={t.no} onClick={this.click(t.no)} className={cx('thread-block', { watched })}>
         <div
           className='back'
           style={{
-            background: `url(https://i.4cdn.org/${board}/${t.tim}s.jpg)`,
+            background: `url(/api/img/${board}/${t.tim}s.jpg)`,
             backgroundSize: 'cover',
           }}
         />
@@ -32,29 +27,27 @@ class ThreadList extends Component {
         <span className='replies'>{t.replies}</span>
 
         <div className='content'>
-          {t.sub && (<p className='title' dangerouslySetInnerHTML={{ __html: t.sub }} />)}
+          {t.sub && <p className='title' dangerouslySetInnerHTML={{ __html: t.sub }} />}
           <span dangerouslySetInnerHTML={{ __html: t.com }} />
         </div>
-
       </div>
     )
   }
 
   render () {
-
     const { filter, threads, watch } = this.props
 
     if (!threads.length && !filter) {
       return (
         <div className='threads'>
-          {Array(20).fill(0).map((v, i) => (
-            <div className='thread-block' key={i} />
-          ))}
+          {Array(20)
+            .fill(0)
+            .map((v, i) => <div className='thread-block' key={i} />)}
         </div>
       )
     }
 
-    const ids = Object.keys(watch).reduce((out, key) => watch[key] ? out.concat(key) : out, [])
+    const ids = Object.keys(watch).reduce((out, key) => (watch[key] ? out.concat(key) : out), [])
 
     // meh.
     const watched = threads.filter(t => ids.includes(t.no.toString())).sort((a, b) => a.no - b.no)
@@ -67,7 +60,6 @@ class ThreadList extends Component {
       </div>
     )
   }
-
 }
 
 export default ThreadList
