@@ -27,7 +27,9 @@ server.get('/api/img/:board/:name', (req, res) => {
     method: 'get',
     url: `https://i.4cdn.org/${board}/${name}`,
     responseType: 'stream',
-  }).then(response => response.data.pipe(res))
+  })
+    .then(response => response.data.pipe(res))
+    .catch(() => res.status(400).end())
 })
 
 server.get('/api/boards', (req, res) => {
