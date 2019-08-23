@@ -43,7 +43,6 @@ class Home extends Component {
   componentDidMount() {
     this.refresh()
     this.refreshTitle(true)
-    this.launchClock()
     window.addEventListener('keydown', this.handleKey)
   }
 
@@ -86,10 +85,6 @@ class Home extends Component {
     if (key === 'r' && !isFocused) {
       const newRefresh = !refresh
 
-      if (newRefresh) {
-        this.launchClock()
-      }
-
       toggleRefresh(newRefresh)
       this.refreshTitle(newRefresh)
       this.refresh(newRefresh)
@@ -106,6 +101,8 @@ class Home extends Component {
     if (name === false) {
       return
     }
+
+    this.launchClock()
 
     this.int = setInterval(() => {
       fetchBoard(isString(name) ? name : selectedBoard)
