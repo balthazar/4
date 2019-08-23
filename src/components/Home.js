@@ -11,47 +11,63 @@ import { fetchBoards, fetchBoard, toggleWatch, changeFilter } from 'actions/main
 import { toggleRefresh } from 'actions/config'
 
 @provideHooks({
-  fetch: ({ dispatch, initialState }) => Promise.all([
-    dispatch(fetchBoards()),
-    dispatch(fetchBoard(initialState.config.selectedBoard)),
-  ]),
+  fetch: ({ dispatch, initialState }) =>
+    Promise.all([dispatch(fetchBoards()), dispatch(fetchBoard(initialState.config.selectedBoard))]),
 })
-@connect(({
-  main: { boards, threads, watch, filter },
-  config: { selectedBoard, refresh },
-}) => ({
-  boards,
-  threads: threads.filter(t =>
-    (t.com && t.com.toLowerCase().includes(filter))
-    || (t.sub && t.sub.toLowerCase().includes(filter))
-  ),
-  watch,
-  filter,
-  selectedBoard,
-  refresh,
-}), {
-  fetchBoard,
-  toggleRefresh,
-  toggleWatch,
-  changeFilter,
-})
+@connect(
+  ({ main: { boards, threads, watch, filter }, config: { selectedBoard, refresh } }) => ({
+    boards,
+    threads: threads.filter(
+      t =>
+        (t.com && t.com.toLowerCase().includes(filter)) ||
+        (t.sub && t.sub.toLowerCase().includes(filter)),
+    ),
+    watch,
+    filter,
+    selectedBoard,
+    refresh,
+  }),
+  {
+    fetchBoard,
+    toggleRefresh,
+    toggleWatch,
+    changeFilter,
+  },
+)
 class Home extends Component {
+  state = {
+    isFocused: false,
+    timer: 6,
+  }
 
-  componentDidMount () {
+  componentDidMount() {
     this.refresh()
     this.refreshTitle(true)
+    this.launchClock()
     window.addEventListener('keydown', this.handleKey)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKey)
+  }
+
+  launchClock = () => {
+    if (this.clock) {
+      clearInterval(this.clock)
+    }
+
+    this.setState({ timer: 6 })
+
+    this.clock = setInterval(() => {
+      this.setState({ timer: this.state.timer <= 0 ? 6 : this.state.timer - 1 })
+    }, 1e3)
   }
 
   refreshTitle = value => {
     clearInterval(this.intTitle)
 
     if (!value) {
-      return document.title = '4 ☰'
+      return (document.title = '4 ☰')
     }
 
     let i = 0
@@ -65,9 +81,15 @@ class Home extends Component {
 
   handleKey = ({ key }) => {
     const { toggleRefresh, refresh } = this.props
+    const { isFocused } = this.state
 
-    if (key === 'r') {
+    if (key === 'r' && !isFocused) {
       const newRefresh = !refresh
+
+      if (newRefresh) {
+        this.launchClock()
+      }
+
       toggleRefresh(newRefresh)
       this.refreshTitle(newRefresh)
       this.refresh(newRefresh)
@@ -77,52 +99,61 @@ class Home extends Component {
   refresh = name => {
     const { fetchBoard, selectedBoard } = this.props
 
-    if (this.int) { clearInterval(this.int) }
-    if (name === false) { return }
+    if (this.int) {
+      clearInterval(this.int)
+    }
+
+    if (name === false) {
+      return
+    }
 
     this.int = setInterval(() => {
       fetchBoard(isString(name) ? name : selectedBoard)
-    }, 7E3)
+    }, 7e3)
   }
 
-  render () {
-
+  render() {
     const {
       boards,
       threads,
+      refresh,
       watch,
       filter,
       selectedBoard,
       toggleWatch,
       changeFilter,
     } = this.props
+    const { timer } = this.state
 
     return (
       <div>
-
         <BoardList
           onChange={name => this.refresh(name)}
           boardNames={boards.map(({ board }) => board)}
         />
 
+        {refresh && timer > -1 && <span className="timer">{timer}</span>}
+
         <input
-          className='main-filter'
-          placeholder='Filter threads'
-          type='text'
+          className="main-filter"
+          placeholder="Filter threads"
+          type="text"
           value={filter}
-          onChange={e => changeFilter(e.target.value)} />
+          onFocus={() => this.setState({ isFocused: true })}
+          onBlur={() => this.setState({ isFocused: false })}
+          onChange={e => changeFilter(e.target.value)}
+        />
 
         <ThreadList
           onClick={toggleWatch}
           watch={watch}
           board={selectedBoard}
           filter={filter}
-          threads={threads} />
-
+          threads={threads}
+        />
       </div>
     )
   }
-
 }
 
 export default Home
