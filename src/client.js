@@ -8,15 +8,14 @@ import { Router, browserHistory, match } from 'react-router'
 import createStore from 'store'
 import routes from 'routes'
 
-import 'styles/main.scss'
-
 const store = createStore(browserHistory, window.__INITIAL_STATE__)
 const history = syncHistoryWithStore(browserHistory, store)
 
 const matchRoutes = location =>
   match({ routes, location }, (error, redirectLocation, renderProps) => {
-
-    if (redirectLocation) { return matchRoutes(redirectLocation) }
+    if (redirectLocation) {
+      return matchRoutes(redirectLocation)
+    }
 
     const locals = {
       path: renderProps.location.pathname,
@@ -33,7 +32,6 @@ const matchRoutes = location =>
     } else {
       trigger('fetch', components, locals)
     }
-
   })
 
 history.listen(matchRoutes)

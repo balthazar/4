@@ -10,22 +10,18 @@ export default {
 
   devtool: 'eval',
 
-  entry: [
-    ...webpackConfig.entry,
-    'webpack-hot-middleware/client',
-  ],
+  entry: [...webpackConfig.entry, 'webpack-hot-middleware/client'],
 
   module: {
-    loaders: [...webpackConfig.module.loaders, {
-      test: /\.js$/,
-      loader: 'babel-loader',
-      include: src,
-      query: { presets: ['react-hmre'] },
-    }, {
-      test: /\.scss$/,
-      loaders: ['style-loader', 'css-loader', 'sass-loader', 'autoprefixer-loader'],
-      include: src,
-    }],
+    loaders: [
+      ...webpackConfig.module.loaders,
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: src,
+        query: { presets: ['react-hmre'] },
+      },
+    ],
   },
 
   plugins: [
@@ -33,5 +29,4 @@ export default {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
   ],
-
 }

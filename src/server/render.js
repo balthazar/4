@@ -1,5 +1,5 @@
-import path from 'path'
 import React from 'react'
+import path from 'path'
 import { trigger } from 'redial'
 import { Provider } from 'react-redux'
 import { Router, match, createMemoryHistory } from 'react-router'

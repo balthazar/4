@@ -5,7 +5,6 @@ const env = process.env.NODE_ENV || 'development'
 const dist = path.resolve(__dirname, '../dist')
 
 export default {
-
   entry: ['./src/client'],
 
   output: {
@@ -15,21 +14,20 @@ export default {
   },
 
   module: {
-    loaders: [{
-      test: /\.json$/,
-      loader: 'json-loader',
-    }],
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
+      },
+    ],
   },
 
   plugins: [
-
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(env),
         BROWSER: true,
       },
     }),
-
   ],
-
 }
