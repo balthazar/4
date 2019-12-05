@@ -47,7 +47,7 @@
     "express": "^4.14.0",
     "lodash": "^4.17.2",
     "memory-cache": "^0.1.6",
-    "morgan": "^1.7.0",
+    "morgan": "^1.9.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",
