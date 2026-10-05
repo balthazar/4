@@ -74,11 +74,11 @@ server.get('/api/boards/:name', (req, res) => {
 server.use('/assets', express.static(config.assetsFolder))
 server.use(render)
 
-server.listen(config.port, 'localhost', err => {
+server.listen(config.port, config.host, err => {
   /* eslint-disable no-console */
   if (err) {
     return console.log(err)
   }
-  console.log(`[APP] listening at localhost:${config.port} in ${config.env} mode`)
+  console.log(`[APP] listening at ${config.host}:${config.port} in ${config.env} mode`)
   /* eslint-enable no-console */
 })
